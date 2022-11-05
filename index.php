@@ -68,7 +68,7 @@ function setSong(theid,el){
   <li onClick="setSong(37,this);">Urgent - Foreigner</li>
   <li onClick="setSong(3,this);">What I like about you - The Romantics</li>
   <li onClick="setSong(4,this);">Whip it - Devo</li>
-  <li onClick="setSong(121,this);">White Wedding - Billy Idol</li>
+  <li onClick="setSong(14,this);">White Wedding - Billy Idol</li>
   <li onClick="setSong(28,this);">Working for the Weekend - Loverboy</li>
   <li onClick="setSong(43,this);">You're All I've Got Tonight - The Cars</li>
 </ol>

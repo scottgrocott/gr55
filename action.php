@@ -48,7 +48,7 @@ function onEnabled() {
   </head>
 
   <body>
-    <h1>WebMidi.js Quick Start</h1>
+    debug<br>
     <?php echo $song_id?>
   </body>
 
