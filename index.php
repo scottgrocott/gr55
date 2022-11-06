@@ -13,7 +13,7 @@
 
 function setSong(theid,el){
 //alert(el.innerHTML);
-    document.getElementById('theiframe').src = '/action.php?song_id=' + theid;
+    document.getElementById('theiframe').src = '/dev.php?song_id=' + theid;
 }
 
     </script>
@@ -72,7 +72,7 @@ function setSong(theid,el){
   <li onClick="setSong(28,this);">Working for the Weekend - Loverboy</li>
   <li onClick="setSong(43,this);">You're All I've Got Tonight - The Cars</li>
 </ol>
-<iframe src="/action.php?song_id=0" id="theiframe">
+<iframe src="/dev.php?song_id=0" id="theiframe">
 
 </body>
 

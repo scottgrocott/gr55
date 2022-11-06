@@ -50,6 +50,15 @@ function onEnabled() {
   <body>
     debug<br>
     <?php echo $song_id?>
+
+
+    <!--  
+
+1100nnnn	0ppppppp	Program Change. This message sent when the patch number changes. (ppppppp) is the new program number.
+
+Decimal	Binary	Hex	Value	Used As
+0	00000000	00	Bank Select	0-127	MSB
+    -->
   </body>
 
 </html>

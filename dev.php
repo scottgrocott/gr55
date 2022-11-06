@@ -16,35 +16,31 @@ $song_id = $_REQUEST['song_id'];
   <head>
 
     <meta charset="UTF-8">
-    <title>WebMidi</title>
+    <title>jzz.js</title>
 
     
 
-    <script>
-
-navigator.requestMIDIAccess()
-    .then(onMIDISuccess, onMIDIFailure);
-
-function onMIDISuccess(midiAccess) {
-    console.log(midiAccess);
-
-    var inputs = midiAccess.inputs;
-    var outputs = midiAccess.outputs;
-    console.log(outputs);
-}
-
-function onMIDIFailure() {
-    console.log('Could not access your MIDI devices.');
-}
-
-
-    </script>
+    <script src="/JZZ-master/javascript/JZZ.js"></script>
 
   </head>
 
   <body>
-    <h1>WebMidi</h1>
+    <h1>jzz.js</h1>
     <?php echo $song_id?>
+
+    <script>
+JZZ().or('Cannot start MIDI engine!')
+     .openMidiOut().or('MIDI-Out: Cannot open!')
+     .and(function(){ console.log('MIDI-Out:', this.name()); });
+     //bank(c, kk);
+     port = JZZ().openMidiOut('GR-55');
+     port2 = JZZ().openMidiOut('2- GR-55');
+     msg = port.program(0,<?php echo $song_id?>);
+
+     msg2 = port2.bank(0,0);
+     msg2 = port2.program(0,<?php echo $song_id?>);
+
+        </script>
   </body>
 
 </html>
