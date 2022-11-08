@@ -35,6 +35,8 @@ JZZ().or('Cannot start MIDI engine!')
      //bank(c, kk);
      port = JZZ().openMidiOut('GR-55');
      port2 = JZZ().openMidiOut('2- GR-55');
+
+     msg = port.bank(0,0);
      msg = port.program(0,<?php echo $song_id?>);
 
      msg2 = port2.bank(0,0);
