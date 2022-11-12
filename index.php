@@ -34,6 +34,9 @@
         font-size: 15px;
         color:lightgreen;
       }
+      #songlist{
+        font-size:25px;
+      }
     </style>
 
 <script>
@@ -67,7 +70,7 @@ document.getElementById('outputinfo').innerHTML = el.innerHTML + ' -' + theid + 
         //bank(c, kk);
         port = JZZ().openMidiOut(document.getElementById('selectmidiout').value);
         //port2 = JZZ().openMidiOut('2- GR-55');
-        document.getElementById('outputinfo').innerHTML =  ' Bank No. 0 Program No. ' + (theid + 1) + ' -' + el.innerHTML;
+        document.getElementById('outputinfo').innerHTML =  ' B-0 P-' + (theid + 1) + ' -' + el.innerHTML;
         el.style.backgroundColor = 'lightgreen';
         //document.getElementById('theiframe').src = '/dev.php?song_id=' + theid;
         msg = port.bank(0,0);
