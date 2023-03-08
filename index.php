@@ -1,11 +1,18 @@
 <?php
 // This path should point to Composer's autoloader
-require 'vendor/autoload.php';
-$mongo = new MongoDB\Client("mongodb://localhost:27017");
-$collection = $mongo->gr55->patches;
-$result = $collection->find()->toArray();
+//require 'vendor/autoload.php';
+//$mongo = new MongoDB\Client("mongodb://localhost:27017");
+//$collection = $mongo->gr55->patches;
+//$result = $collection->find()->toArray();
 
 //print_r($result);
+
+?>
+
+<?php 
+$json_url = "http://scottgrocott.com/gr55/api/";
+$json = file_get_contents($json_url);
+$result = json_decode($json, TRUE);
 
 ?>
 <!doctype html>
@@ -123,6 +130,15 @@ document.getElementById('outputinfo').innerHTML = el.innerHTML + ' -' + theid + 
 </ol>
 
 <input type="text" id="songnumber"><button onClick="setSong(document.getElementById('songnumber').value,this);">test</button>
+
+
+
+
+
+
+
+
+
 </main>
 
 
