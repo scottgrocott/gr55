@@ -1,9 +1,0 @@
-.*
-minified
-web-midi-api
-test*
-coverage
-Gruntfile.js
-*.html
-*.bat
-!test
