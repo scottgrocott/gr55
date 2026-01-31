@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIDI Song Preset Selector</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        #midiOutputs {
+            width: 100%;
+            margin-bottom: 20px;
+            padding: 10px;
+        }
+        #songList {
+            list-style: none;
+            padding: 0;
+        }
+        #songList li {
+            cursor: pointer;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            transition: background-color 0.3s;
+        }
+        #songList li:hover {
+            background-color: #f0f0f0;
+        }
+        #status {
+            margin: 15px 0;
+            padding: 10px;
+            background: #f8f8f8;
+            border: 1px solid #ddd;
+            min-height: 60px;
+        }
+        #jsonData {
+            width: 100%;
+            height: 300px;
+            font-family: monospace;
+            margin-bottom: 20px;
+            display: none; /* hidden by default */
+        }
+        label[for="jsonData"] {
+            display: block;
+            margin: 20px 0 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>MIDI Song Preset Selector</h1>
+
+    <label for="midiOutputs">MIDI Output:</label><br>
+    <select id="midiOutputs">
+        <option value="">-- Select MIDI Output --</option>
+    </select>
+
+    <div id="status">Loading songs...</div>
+
+    <label for="jsonData" onClick="toggleJsonData()">(click to show/edit JSON data)</label>
+    <textarea id="jsonData">[
+  {"preset":11,"title":"2 Tickets to Paradise","artist":"Eddie Money"},
+  {"preset":11,"title":"867-5309 (Jenny)","artist":"Tommy Tuetone"},
+  {"preset":10,"title":"Another One Bites the Dust","artist":"Queen"},
+  {"preset":60,"title":"Billy Jean","artist":"Michael Jackson"},
+  {"preset":0,"title":"Birthday","artist":"The Beatles"},
+  {"preset":20,"title":"Blue Monday","artist":"New Order"},
+  {"preset":12,"title":"Break Up Song","artist":"Greg Khin"},
+  {"preset":42,"title":"Cars","artist":"Gary Newman"},
+  {"preset":11,"title":"Dancing with Myself","artist":"Billy Idol"},
+  {"preset":46,"title":"Dont Change","artist":"INXS"},
+  {"preset":5,"title":"Dont You Forget About Me","artist":"Simple Minds"},
+  {"preset":45,"title":"Enjoy the Silence","artist":"Depech Mode"},
+  {"preset":41,"title":"Everybody Wants to Rule the World","artist":"Tears for Fears"},
+  {"preset":15,"title":"Faith","artist":"George Michael"},
+  {"preset":33,"title":"Give it to me Baby","artist":"Rick James"},
+  {"preset":0,"title":"Hot,Hot,Hot","artist":"The Cure"},
+  {"preset":5,"title":"Hungry Like the Wolf","artist":"Duran Duran"},
+  {"preset":10,"title":"I Cant Go for That","artist":"Hall &amp; Oats"},
+  {"preset":21,"title":"I Ran","artist":"Flock of Seaguls"},
+  {"preset":10,"title":"Jessie's Girl","artist":"Rick Springfield"},
+  {"preset":39,"title":"Just Like Heaven","artist":"The Cure"},
+  {"preset":18,"title":"Just What I Needed","artist":"The Cars"},
+  {"preset":34,"title":"Kiss","artist":"Prince"},
+  {"preset":1,"title":"Let's Dance","artist":"David Bowie"},
+  {"preset":29,"title":"Let's Go Crazy","artist":"Prince"},
+  {"preset":22,"title":"Lets Go- The Cars","artist":""},
+  {"preset":26,"title":"Lovin,Touchin,Squeezin","artist":"Journey"},
+  {"preset":27,"title":"Melt With You","artist":"Modern English"},
+  {"preset":10,"title":"My Sharona","artist":"The Knack"},
+  {"preset":10,"title":"Need You Tonight","artist":"INXS"},
+  {"preset":1,"title":"New Sensation","artist":"INXS"},
+  {"preset":11,"title":"One Thing Leads to Another","artist":"The Fixx"},
+  {"preset":9,"title":"Policy of Truth","artist":"Depeche Mode"},
+  {"preset":32,"title":"Power of Love","artist":"Huey Lewis &amp; the News"},
+  {"preset":2,"title":"Pump it Up","artist":"Elvis Costello"},
+  {"preset":10,"title":"Rapper's Delight","artist":"Sugarhill Gang"},
+  {"preset":9,"title":"Relax","artist":"Frankie Goes.."},
+  {"preset":30,"title":"Rio","artist":"Duran Duran"},
+  {"preset":1,"title":"Save it for Later","artist":"English Beat"},
+  {"preset":24,"title":"She Drives Me Crazy","artist":"Fine Young Cannabals"},
+  {"preset":18,"title":"She Sells Sanctuary","artist":"The Cult"},
+  {"preset":10,"title":"Should I Stay or Should I Go","artist":"The Clash"},
+  {"preset":25,"title":"Space Age Lovesong","artist":"Flock Seaguls"},
+  {"preset":44,"title":"Spin Me Round","artist":"Dead or Alive"},
+  {"preset":23,"title":"Strange Love","artist":"Depech Mode"},
+  {"preset":8,"title":"Summer of 69","artist":"Bryan Adams"},
+  {"preset":35,"title":"Super Freak","artist":"Rick James"},
+  {"preset":36,"title":"Take On Me","artist":"AhHa"},
+  {"preset":37,"title":"Urgent","artist":"Foreigner"},
+  {"preset":3,"title":"What I like about you","artist":"The Romantics"},
+  {"preset":4,"title":"Whip it","artist":"Devo"},
+  {"preset":14,"title":"White Wedding","artist":"Billy Idol"},
+  {"preset":22,"title":"Who Can it Be Now?","artist":"Men at Work"},
+  {"preset":28,"title":"Working for the Weekend","artist":"Loverboy"},
+  {"preset":43,"title":"You're All I've Got Tonight","artist":"The Cars"}
+]</textarea>
+
+    <ul id="songList"></ul>
+
+    <script>
+        async function init() {
+            const status = document.getElementById('status');
+            status.textContent = 'Initializing...';
+
+            // Try to get MIDI access
+            let midiAccess = null;
+            try {
+                if (navigator.requestMIDIAccess) {
+                    midiAccess = await navigator.requestMIDIAccess({ sysex: false });
+                    const select = document.getElementById('midiOutputs');
+                    for (let output of midiAccess.outputs.values()) {
+                        const option = document.createElement('option');
+                        option.value = output.id;
+                        option.textContent = output.name || output.id;
+                        select.appendChild(option);
+                    }
+                    if (midiAccess.outputs.size === 0) {
+                        status.textContent += '\nNo MIDI outputs found.';
+                    }
+                } else {
+                    status.textContent += '\nWeb MIDI not supported.';
+                }
+            } catch (err) {
+                console.error('MIDI init failed:', err);
+                status.textContent += `\nMIDI error: ${err.message}`;
+            }
+
+            // Load and sort songs by title
+            const jsonText = document.getElementById('jsonData').value.trim();
+            let songs = [];
+            try {
+                songs = JSON.parse(jsonText);
+                // Sort alphabetically by title (case-insensitive)
+                songs.sort((a, b) => a.title.localeCompare(b.title));
+                console.log(`Loaded and sorted ${songs.length} songs by title`);
+            } catch (e) {
+                console.error('JSON parse error:', e);
+                status.textContent = `ERROR: Invalid JSON\n${e.message}\nFix and refresh.`;
+                return;
+            }
+
+            // Build list
+            const ul = document.getElementById('songList');
+            ul.innerHTML = '';
+
+            if (songs.length === 0) {
+                status.textContent += '\nNo songs found.';
+                return;
+            }
+
+            songs.forEach(song => {
+                const li = document.createElement('li');
+                const display = `${song.title}${song.artist ? ' - ' + song.artist : ''}`;
+                li.textContent = display;
+                li.onclick = () => sendPreset(midiAccess, document.getElementById('midiOutputs').value, song.preset);
+                ul.appendChild(li);
+            });
+
+            status.textContent = `Loaded ${songs.length} songs (sorted by title). Select output and click a song to send preset.`;
+        }
+
+        function sendPreset(midiAccess, outputId, preset) {
+            if (!outputId) {
+                alert('Please select a MIDI output first.');
+                return;
+            }
+            if (!midiAccess) {
+                alert('MIDI access not available.');
+                return;
+            }
+            const output = midiAccess.outputs.get(outputId);
+            if (!output) {
+                alert('Selected output not found.');
+                return;
+            }
+
+            const channel = 0;
+
+            output.send([0xB0 + channel, 0x00, 0x00]); // Bank MSB
+            output.send([0xB0 + channel, 0x20, 0x00]); // Bank LSB
+            output.send([0xC0 + channel, Number(preset) & 0x7F]); // Program Change
+
+            console.log(`Sent preset ${preset} on channel ${channel+1}`);
+            document.getElementById('status').textContent = 
+                `Sent preset ${preset}  |  Last sent: ${new Date().toLocaleTimeString()}`;
+        }
+
+        window.addEventListener('load', init);
+        function toggleJsonData() {
+            const textarea = document.getElementById('jsonData');
+            if (textarea.style.display === 'none' || textarea.style.display === '') {
+                textarea.style.display = 'block';
+            } else {
+                textarea.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
