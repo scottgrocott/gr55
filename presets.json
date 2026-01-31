@@ -273,5 +273,42 @@
     "preset": 43,
     "title": "You're All I've Got Tonight",
     "artist": "The Cars"
+  },
+  {
+    "preset": 38,
+    "title": "Never Gonna Give You Up",
+    "artist": "Rick Ashley"
+  }
+  ,
+  {
+    "preset": 31,
+    "title": "I Was Made for Loving You",
+    "artist": "Kiss"
+  }
+  ,
+  {
+    "preset": 47,
+    "title": "You May Be Right",
+    "artist": "Billy Joel"
+  },
+  {
+    "preset": 48,
+    "title": "Somebody's Baby",
+    "artist": "Jackson Browne"
+  },
+  {
+    "preset": 49,
+    "title": "Dancing",
+    "artist": "Bruce Springsteen"
+  },
+  {
+    "preset": 50,
+    "title": "Modern Love",
+    "artist": "David Bowie"
+  },
+  {
+    "preset": 51,
+    "title": "Jane",
+    "artist": "Jefferson Starship"
   }
 ]
